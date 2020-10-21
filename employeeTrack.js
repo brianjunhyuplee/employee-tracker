@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
     user: "root",
 
     // Your password
-    password: "Asianking247",
+    password: "password",
     database: "employeesDB"
 });
 
@@ -186,7 +186,10 @@ function promptView() {
             else {
             var query = "SELECT departments.id, roles.department_id, roles.id, employees.role_id FROM ((departments INNER JOIN roles ON departments.id = roles.department_id) INNER JOIN employees ON roles.id = employees.role_id";
             connection.query(query, function(err,res){
-                console.log("printed all");
+                if (err){throw err;}
+                console.log("in all");
+                console.table(res);
+                editTables();
             });
             }
         })
