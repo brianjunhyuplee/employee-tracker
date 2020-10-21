@@ -82,7 +82,11 @@ function addDepartments(){
             message: "What is the name of the Department"
         }).then(function(answer){
             var ranId = Math.floor((Math.random()+1)*10000);
-            var insert = "INSERT INTO departments VALUES (?,?)" 
+            var insert = "INSERT INTO departments VALUES (?,?)";    
+            connection.query(insert, [ranId, answer.name], function(err,res){
+                console.log("Added Department!");
+                editTables();
+            })
         })
 }
 
@@ -98,7 +102,7 @@ function promptView() {
                 "employees"
             ]
         }).then(function(answer){
-            var query = "SELECT * FROM ?"
+            var query = "SELECT * FROM ?";
             connection.query(query, answer.view , function(err,res){
                 console.log(res);
                 editTables();
