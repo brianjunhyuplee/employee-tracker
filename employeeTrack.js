@@ -1,19 +1,19 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-var consoleTable = require("console.table");
-var conection = mysql.createConnection({
+var consoletable = require("console.table");
+var connection = mysql.createConnection({
     host: "localhost",
-
+  
     // Your port; if not 3306
     port: 3306,
-
+  
     // Your username
     user: "root",
-
+  
     // Your password
-    password: "password",
-    database: "top_songsDB"
-});
+    password: "Asianking247",
+    database: "employeesDB"
+  });
 
 connection.connect(function (err) {
     if (err) throw err;
@@ -25,7 +25,7 @@ function editTables() {
         .prompt({
             name: "action",
             type: "rawlist",
-            message: "What would you like to do?",
+            message: "What would you like to add?",
             choices: [
                 "Add Departments, Roles, or Employees",
                 "View Departments, Roles, or Employees",
@@ -81,9 +81,8 @@ function addDepartments() {
             type: "input",
             message: "What is the name of the Department?"
         }).then(function (answer) {
-            var ranId = Math.floor((Math.random() + 1) * 10000);
-            var insert = "INSERT INTO departments VALUES (?,?)";
-            connection.query(insert, [ranId, answer.name], function (err, res) {
+            var insert = "INSERT INTO departments (department_name) VALUES ?";
+            connection.query(insert, {department_name : answer.name}, function (err, res) {
                 console.log("Added Department!");
                 editTables();
             })
@@ -109,14 +108,14 @@ function addRoles() {
                 message: "Which department do you want to add it to?"
             }
         ]).then(function (answer) {
-            var ranId = Math.floor((Math.random() + 1) * 10000);
-            var insert = "INSERT INTO roles VALUES (?,?,?,?)";
-            var query = "SELECT departments.id FROM departments WHERE ?";
+            var insert = "INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)";
+            var query = "SELECT id FROM departments WHERE ?";
             var depID = 0;
-            connection.query(query, department, function(err,res){
+            connection.query(query, answer.department, function(err,res){
+                console.log(res);
                 depID = res;
             });
-            connection.query(insert, [ranId, answer.title, answer.salary, depID], function (err, res) {
+            connection.query(insert, [{title : answer.title},{salary : answer.salary} , {departmentid : depID}], function (err, res) {
                 console.log("Added Department!");
                 editTables();
             });
@@ -136,8 +135,8 @@ function promptView() {
             ]
         }).then(function (answer) {
             var query = "SELECT * FROM ?";
-            connection.query(query, answer.view, function (err, res) {
-                console.log(res);
+            connection.query(query, answer.view ,function (err, res) {
+                consoletable.res;
                 editTables();
             })
         })
@@ -156,3 +155,6 @@ function promptUpdate() {
             ]
         })
 }
+
+
+
