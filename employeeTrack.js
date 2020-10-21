@@ -61,32 +61,65 @@ function promptAdd() {
                 "roles",
                 "employees"
             ]
-        }).then(function(answer){
-            if (answer.add === "departments"){
+        }).then(function (answer) {
+            if (answer.add === "departments") {
                 addDepartments();
             }
-            else if (answer.add === "roles"){
+            else if (answer.add === "roles") {
                 addRoles();
             }
-            else if (answer.add === "employees"){
+            else if (answer.add === "employees") {
                 addEmployees();
             }
         })
 }
 
-function addDepartments(){
+function addDepartments() {
     inquirer
         .prompt({
             name: "name",
             type: "input",
-            message: "What is the name of the Department"
-        }).then(function(answer){
-            var ranId = Math.floor((Math.random()+1)*10000);
-            var insert = "INSERT INTO departments VALUES (?,?)";    
-            connection.query(insert, [ranId, answer.name], function(err,res){
+            message: "What is the name of the Department?"
+        }).then(function (answer) {
+            var ranId = Math.floor((Math.random() + 1) * 10000);
+            var insert = "INSERT INTO departments VALUES (?,?)";
+            connection.query(insert, [ranId, answer.name], function (err, res) {
                 console.log("Added Department!");
                 editTables();
             })
+        })
+}
+
+function addRoles() {
+    inquirer
+        .prompt([
+            {
+                name: "title",
+                type: "input",
+                message: "What is the title of this role?"
+            },
+            {
+                name: "salary",
+                type: "number",
+                message: "What is the salary of this role?"
+            },
+            {
+                name: "department",
+                type: "input",
+                message: "Which department do you want to add it to?"
+            }
+        ]).then(function (answer) {
+            var ranId = Math.floor((Math.random() + 1) * 10000);
+            var insert = "INSERT INTO roles VALUES (?,?,?,?)";
+            var query = "SELECT departments.id FROM departments WHERE ?";
+            var depID = 0;
+            connection.query(query, department, function(err,res){
+                depID = res;
+            });
+            connection.query(insert, [ranId, answer.title, answer.salary, depID], function (err, res) {
+                console.log("Added Department!");
+                editTables();
+            });
         })
 }
 
@@ -101,9 +134,9 @@ function promptView() {
                 "roles",
                 "employees"
             ]
-        }).then(function(answer){
+        }).then(function (answer) {
             var query = "SELECT * FROM ?";
-            connection.query(query, answer.view , function(err,res){
+            connection.query(query, answer.view, function (err, res) {
                 console.log(res);
                 editTables();
             })
