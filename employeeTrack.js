@@ -55,7 +55,7 @@ function promptAdd() {
         .prompt({
             name: "add",
             type: "rawlist",
-            message: "What would you like to do?",
+            message: "What would you like to add?",
             choices: [
                 "departments",
                 "roles",
@@ -114,17 +114,53 @@ function addRoles() {
             connection.query(query, {department_name: answer.department} , function(err,res){
                 if (err) {throw err;}
                 console.log(JSON.stringify(res[0].id));
-                depID = JSON.stringify(res[0].id);
-            });
-            console.log(answer.title);
-            console.log(answer.salary);
-            connection.query(insert, [answer.title, answer.salary , depID], function (err, res) {
-                if (err) {throw err;}
-                console.log("Added role!");
-                editTables();
+                depID = parseInt(JSON.stringify(res[0].id));
+                connection.query(insert, [answer.title, answer.salary , depID], function (err, res) {
+                    if (err) {throw err;}
+                    console.log("Added role!");
+                    editTables();
+                });
             });
         })
 }
+
+function addEmployees() {
+    inquirer
+        .prompt([
+            {
+                name: "first_name",
+                type: "input",
+                message: "What is the first name of this employee?"
+            },
+            {
+                name: "last_name",
+                type: "input",
+                message: "What is the last name of this employee?"
+            },
+            {
+                name: "role",
+                type: "input",
+                message: "What is this employee's role?"
+            }
+        ]).then(function (answer) {
+            var insert = "INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)";
+            var query = "SELECT id FROM roles WHERE ?";
+            var role_id;
+            connection.query(query, {title : answer.role} , function(err,res){
+                if (err) {throw err;}
+                console.log(parseInt(JSON.stringify(res[0].id)));
+                role_id = parseInt(JSON.parse(res[0].id));
+                connection.query(insert, [answer.first_name, answer.last_name , role_id, 0], function (error, response) {
+                    if (error) {throw err;}
+                    console.log("Added role!");
+                    editTables();
+                });
+            });
+            
+        })
+}
+
+
 
 function promptView() {
     inquirer
