@@ -29,7 +29,8 @@ function editTables() {
             choices: [
                 "Add Departments, Roles, or Employees",
                 "View Departments, Roles, or Employees",
-                "Update Employee Roles"
+                "Update Employee Roles",
+                "Exit Program"
             ]
         }).then(function (answer) {
             switch (answer.action) {
@@ -41,6 +42,8 @@ function editTables() {
                     break;
                 case "Update Employee Roles":
                     promptUpdate();
+                    break;
+                case "Exit Program":
                     break;
             }
         })
@@ -68,10 +71,16 @@ function promptView() {
             type: "rawlist",
             message: "What would you like to do?",
             choices: [
-                "Department",
+                "Departments",
                 "Roles",
                 "Employees"
             ]
+        }).then(function(answer){
+            var query = "SELECT * FROM ?"
+            connection.query(query, answer.view , function(err,res){
+                console.log(res);
+                editTables();
+            })
         })
 }
 

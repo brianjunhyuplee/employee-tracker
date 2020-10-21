@@ -3,13 +3,13 @@ CREATE database employeesDB;
 
 USE employeesDB;
 
-CREATE TABLE department (
+CREATE TABLE departments (
   id INT NULL,
   name VARCHAR(30) NULL,
   PRIMARY KEY (id)
 );
 
-CREATE TABLE employee_role (
+CREATE TABLE roles (
   id INT NULL,
   title VARCHAR(30) NULL,
   salary DECIMAL(10,2) NULL,
@@ -17,7 +17,7 @@ CREATE TABLE employee_role (
   PRIMARY KEY (id)
 );
 
-CREATE TABLE employee (
+CREATE TABLE employees (
   id INT NULL,
   first_name VARCHAR(30) NULL,
   last_name VARCHAR(30) NULL,
