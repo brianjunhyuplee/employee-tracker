@@ -118,7 +118,7 @@ function addRoles() {
             });
             console.log(answer.title);
             console.log(answer.salary);
-            connection.query(insert, [{title : answer.title},{salary : answer.salary} ,{department_id  : depID}], function (err, res) {
+            connection.query(insert, [answer.title, answer.salary , depID], function (err, res) {
                 if (err) {throw err;}
                 console.log("Added role!");
                 editTables();
