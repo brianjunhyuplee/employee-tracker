@@ -30,7 +30,7 @@ INSERT INTO departments (id, department_name)
 VALUES (0,"HR");
 
 INSERT INTO roles (id, title, salary, department_id)
-VALUES (0,"chocolate", 100.00, 0);
+VALUES (0,"Cool guy", 100.00, 0);
 
 INSERT INTO employees (id, first_name, last_name, role_id, manager_id)
 VALUES (0,"mark", "suckerberg", 1, 3);

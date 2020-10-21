@@ -1,6 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-var consoletable = require("console.table");
+var table = require("console.table");
 var connection = mysql.createConnection({
     host: "localhost",
   
@@ -111,12 +111,16 @@ function addRoles() {
             var insert = "INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)";
             var query = "SELECT id FROM departments WHERE ?";
             var depID = 0;
-            connection.query(query, answer.department, function(err,res){
-                console.log(res);
-                depID = res;
+            connection.query(query, {department_name: answer.department} , function(err,res){
+                if (err) {throw err;}
+                console.log(JSON.stringify(res[0].id));
+                depID = JSON.stringify(res[0].id);
             });
-            connection.query(insert, [{title : answer.title},{salary : answer.salary} , {departmentid : depID}], function (err, res) {
-                console.log("Added Department!");
+            console.log(answer.title);
+            console.log(answer.salary);
+            connection.query(insert, [{title : answer.title},{salary : answer.salary} ,{department_id  : depID}], function (err, res) {
+                if (err) {throw err;}
+                console.log("Added role!");
                 editTables();
             });
         })
@@ -134,9 +138,10 @@ function promptView() {
                 "employees"
             ]
         }).then(function (answer) {
-            var query = "SELECT * FROM ?";
-            connection.query(query, answer.view ,function (err, res) {
-                consoletable.res;
+            var query = "SELECT * FROM "+ answer.view;
+            connection.query(query, function (err, res) {
+                if (err) {throw err;}
+                console.table(res);
                 editTables();
             })
         })
