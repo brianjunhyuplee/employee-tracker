@@ -57,10 +57,32 @@ function promptAdd() {
             type: "rawlist",
             message: "What would you like to do?",
             choices: [
-                "Department",
-                "Roles",
-                "Employees"
+                "departments",
+                "roles",
+                "employees"
             ]
+        }).then(function(answer){
+            if (answer.add === "departments"){
+                addDepartments();
+            }
+            else if (answer.add === "roles"){
+                addRoles();
+            }
+            else if (answer.add === "employees"){
+                addEmployees();
+            }
+        })
+}
+
+function addDepartments(){
+    inquirer
+        .prompt({
+            name: "name",
+            type: "input",
+            message: "What is the name of the Department"
+        }).then(function(answer){
+            var ranId = Math.floor((Math.random()+1)*10000);
+            var insert = "INSERT INTO departments VALUES (?,?)" 
         })
 }
 
@@ -69,11 +91,11 @@ function promptView() {
         .prompt({
             name: "view",
             type: "rawlist",
-            message: "What would you like to do?",
+            message: "What would you like to view?",
             choices: [
-                "Departments",
-                "Roles",
-                "Employees"
+                "departments",
+                "roles",
+                "employees"
             ]
         }).then(function(answer){
             var query = "SELECT * FROM ?"
@@ -89,11 +111,11 @@ function promptUpdate() {
         .prompt({
             name: "update",
             type: "rawlist",
-            message: "What would you like to do?",
+            message: "What would you like to update?",
             choices: [
-                "Department",
-                "Roles",
-                "Employees"
+                "department",
+                "roles",
+                "employees"
             ]
         })
 }
