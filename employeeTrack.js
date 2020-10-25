@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
     user: "root",
 
     // Your password
-    password: "password",
+    password: "Asianking247",
     database: "employeesDB"
 });
 
@@ -44,7 +44,7 @@ function editTables() {
                     promptUpdate();
                     break;
                 case "Exit Program":
-                    break;
+                    connection.end();
             }
         })
 
@@ -71,6 +71,7 @@ function promptAdd() {
             else if (answer.add === "employees") {
                 addEmployees();
             }
+            
         })
 }
 
@@ -152,7 +153,7 @@ function addEmployees() {
                 role_id = parseInt(JSON.parse(res[0].id));
                 connection.query(insert, [answer.first_name, answer.last_name, role_id, 0], function (error, response) {
                     if (error) { throw err; }
-                    console.log("Added role!");
+                    console.log("Added employee!");
                     editTables();
                 });
             });
@@ -192,16 +193,47 @@ function promptView() {
                 editTables();
             });
             }
-        })
+        });
 }
 
 function promptUpdate() {
     inquirer
-        .prompt({
-            name: "title",
+        .prompt([
+            {
+            name: "name",
             type: "input",
-            message: "What role would you like to update?"
-        })
+            message: "Enter the first and last name of the employee you wish to update."
+            },
+            {
+                name: "role",
+                type: "input",
+                message: "What role would you like to switch this employee to?"
+            }
+        ]).then(function(answer) {
+            
+            var space = false;
+            var firstName = [];
+            var lastName = [];
+            for(i = 0; i < answer.length; i++){
+                if(answer.charAt(i)=== " "){
+                    space = true;
+                }
+                if (space === false){
+                    firstName.push(answer.charAt(i));
+                }
+                else {
+                    lastName.push(answer.charAt(i));
+                }
+            }
+            var firstString = firstName.join();
+            var lastString = lastName.join();
+            connection.query("SELECT * FROM departments WHERE id = ?",[answer.role],function(err,res){
+                if (err) throw err;
+                console.log(res[0]);
+                connection.query("UPDATE employees SET role_id = ? WHERE last_name = ? AND first_name = ?",[res[0],firstString,lastString]);
+                editTables();
+            });
+        });
 }
 
 
